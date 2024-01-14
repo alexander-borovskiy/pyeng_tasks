@@ -49,3 +49,27 @@ bin_ip = "00001010000000010000000111000011"
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+ip = input("Введите IP-адрес сети в формате 10.1.1.0/24: ")
+ip_address, mask = ip.split("/")
+ip_address = ip_address.split(".")
+oct1, oct2, oct3, oct4 = int(ip_address[0]), int(ip_address[1]), int(ip_address[2]), int(ip_address[3])
+ip_bin = "{0:08b}".format(oct1) + "{0:08b}".format(oct2) + "{0:08b}".format(oct3) + "{0:08b}".format(oct4)
+mask = int(mask)
+network = ip_bin[:mask]
+host = ip_bin[mask:]
+host = host.replace(host,"0" * (32-mask))
+ip_bin = network + host
+mask_bin = "1" * mask + "0" * (32 - mask)
+mask_list = [int(mask_bin[:8], 2), int(mask_bin[8:16], 2), int(mask_bin[16:24], 2), int(mask_bin[24:], 2)]
+ip_list = [int(ip_bin[:8], 2), int(ip_bin[8:16], 2), int(ip_bin[16:24], 2), int(ip_bin[24:], 2)]
+template = """
+Network:
+{0:<8}  {1:<8}  {2:<8}  {3:<8}
+{0:08b}  {1:08b}  {2:08b}  {3:08b}
+
+Mask:
+/{4}
+{5:<8}  {6:<8}  {7:<8}  {8:<8}
+{5:08b}  {6:08b}  {7:08b}  {8:08b}
+"""
+print(template.format(int(ip_list[0]), int(ip_list[1]), int(ip_list[2]), int(ip_list[3]), mask, mask_list[0], mask_list[1], mask_list[2], mask_list[3]))
