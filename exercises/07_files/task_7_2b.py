@@ -17,3 +17,9 @@
 """
 
 ignore = ["duplex", "alias", "configuration"]
+with open("config_sw1.txt", "r") as f, open("task_7_2b.txt", "w") as dest:
+    for line in f:
+        words = line.split()
+        words_intersect = set(words) & set(ignore)
+        if not line.startswith("!") and not words_intersect:
+            dest.write(line)
