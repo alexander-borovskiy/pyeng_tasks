@@ -16,8 +16,10 @@
 
 """
 
+from sys import argv
 ignore = ["duplex", "alias", "configuration"]
-with open("config_sw1.txt", "r") as f, open("task_7_2b.txt", "w") as dest:
+srs, new = argv[1], argv[2]
+with open(srs, "r") as f, open(new, "w") as dest:
     for line in f:
         words = line.split()
         words_intersect = set(words) & set(ignore)
