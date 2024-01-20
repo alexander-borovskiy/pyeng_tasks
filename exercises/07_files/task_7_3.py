@@ -20,3 +20,9 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+template = """{0:<7}  {1:<18}  {2}"""
+with open("CAM_table.txt", "r") as f:
+    for line in f:
+        note = line.split()
+        if note and note[0].isdigit():
+            print(template.format(note[0], note[1], note[3]))
