@@ -17,3 +17,14 @@ Enter VLAN number: 10
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+template = """{0:<7}  {1:<18}  {2}"""
+list_for_sort = []
+vlan = input("Enter VLAN number: ")
+with open("CAM_table.txt", "r") as f:
+    for line in f:
+        note = line.split()
+        if note and note[0].isdigit() and note[0] == vlan:
+            list_for_sort.append([int(note[0]), note[1], note[3]])
+    sorted_list = sorted(list_for_sort)
+    for i in sorted_list:
+        print(template.format(i[0], i[1], i[2]))
