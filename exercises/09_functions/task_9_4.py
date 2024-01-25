@@ -44,7 +44,6 @@
 
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
-
 ignore = ["duplex", "alias", "configuration"]
 
 
@@ -64,3 +63,20 @@ def ignore_command(command, ignore):
         if word in command:
             ignore_status = True
     return ignore_status
+
+
+def convert_config_to_dict(config_filename):
+    config_dict = {}
+
+    with open(config_filename) as cfg:
+        for line in cfg:
+            line = line.rstrip()
+            if line and not line.startswith("!") and not ignore_command(line, ignore):
+                if not line.startswith(" "):
+                    config_dict[line] = []
+                    key_command = line
+                else:
+                    config_dict[key_command].append(line[1:])
+        return config_dict
+
+print(convert_config_to_dict("config_sw1.txt"))
