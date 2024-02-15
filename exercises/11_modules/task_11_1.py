@@ -33,7 +33,7 @@ R6           Fa 0/2          143           R S I           2811       Fa 0/0
 
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
-
+from pprint import pprint
 
 def parse_cdp_neighbors(command_output):
     """
@@ -43,7 +43,16 @@ def parse_cdp_neighbors(command_output):
     и с файлами и с выводом с оборудования.
     Плюс учимся работать с таким выводом.
     """
-
+    cdp_flag = False
+    neighbors_dict = {}
+    for line in command_output.split("\n"):
+        if ">" in line:
+            current_device = line[:line.find(">")]
+        elif "Device" in line:
+            cdp_flag = True
+        elif cdp_flag and line:
+            neighbors_dict[current_device, line.split()[1] + line.split()[2]] = line.split()[0], line.split()[-2] + line.split()[-1]
+    return neighbors_dict
 
 if __name__ == "__main__":
     with open("sh_cdp_n_sw1.txt") as f:
