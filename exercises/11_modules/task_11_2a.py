@@ -73,10 +73,30 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
-
+#import graphviz
+from task_11_2 import create_network_map
+from draw_network_graph import draw_topology
+print(dir())
 infiles = [
     "sh_cdp_n_sw1.txt",
     "sh_cdp_n_r1.txt",
     "sh_cdp_n_r2.txt",
     "sh_cdp_n_r3.txt",
 ]
+
+
+#def create_network_map(filenames):
+#    """
+#    Функция обрабатывает вывод команды show cdp neighbors из нескольких файлов и объединяет его в одну
+#    общую топологию. У функции один параметр filenames, который ожидает как аргумент
+#    список с именами файлов, в которых находится вывод команды show cdp neighbors.
+#    """
+#    network_map_dict = {}
+#    for filename in filenames:
+#        with open(filename) as f:
+#            network_map_dict.update(parse_cdp_neighbors(f.read()))
+#    return network_map_dict
+
+
+if __name__ == "__main__":
+    print(create_network_map(infiles))
