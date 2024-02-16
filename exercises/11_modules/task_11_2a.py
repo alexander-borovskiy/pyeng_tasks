@@ -89,17 +89,10 @@ def unique_network_map(topology_dict):
     Функция возвращает словарь, который описывает соединения между
     устройствами. В словаре нет "дублирующих" соединений.
     """
-    unique_network_map_dict = create_network_map(infiles)
-    side_a_list = []
-    side_b_list = []
-    for side_a, side_b in unique_network_map_dict.items():
-        side_a_list.append(side_a)
-        side_b_list.append(side_b)
-    for side_a in side_a_list:
-        if side_a in side_b_list:
-            del unique_network_map_dict[side_a]
-            side_a_list.pop(side_b_list.index(side_a))
-            side_b_list.remove(side_a)
+    unique_network_map_dict = {}
+    for side_a, side_b in topology_dict.items():
+        if not unique_network_map_dict.get(side_b) == side_a:
+            unique_network_map_dict[side_a] = side_b
     return unique_network_map_dict
 
 
