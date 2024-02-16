@@ -33,7 +33,7 @@ R6           Fa 0/2          143           R S I           2811       Fa 0/0
 
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
-from pprint import pprint
+
 
 def parse_cdp_neighbors(command_output):
     """
@@ -53,6 +53,7 @@ def parse_cdp_neighbors(command_output):
         elif cdp_flag and line:
             neighbors_dict[current_device, line.split()[1] + line.split()[2]] = line.split()[0], line.split()[-2] + line.split()[-1]
     return neighbors_dict
+
 
 if __name__ == "__main__":
     with open("sh_cdp_n_sw1.txt") as f:
