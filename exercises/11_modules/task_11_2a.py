@@ -73,10 +73,9 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
-#import graphviz
+import graphviz
 from task_11_2 import create_network_map
 from draw_network_graph import draw_topology
-print(dir())
 infiles = [
     "sh_cdp_n_sw1.txt",
     "sh_cdp_n_r1.txt",
@@ -85,18 +84,25 @@ infiles = [
 ]
 
 
-#def create_network_map(filenames):
-#    """
-#    Функция обрабатывает вывод команды show cdp neighbors из нескольких файлов и объединяет его в одну
-#    общую топологию. У функции один параметр filenames, который ожидает как аргумент
-#    список с именами файлов, в которых находится вывод команды show cdp neighbors.
-#    """
-#    network_map_dict = {}
-#    for filename in filenames:
-#        with open(filename) as f:
-#            network_map_dict.update(parse_cdp_neighbors(f.read()))
-#    return network_map_dict
+def unique_network_map(topology_dict):
+    """
+    Функция возвращает словарь, который описывает соединения между
+    устройствами. В словаре нет "дублирующих" соединений.
+    """
+    unique_network_map_dict = create_network_map(infiles)
+    side_a_list = []
+    side_b_list = []
+    for side_a, side_b in unique_network_map_dict.items():
+        side_a_list.append(side_a)
+        side_b_list.append(side_b)
+    for side_a in side_a_list:
+        if side_a in side_b_list:
+            del unique_network_map_dict[side_a]
+            side_a_list.pop(side_b_list.index(side_a))
+            side_b_list.remove(side_a)
+    return unique_network_map_dict
 
 
 if __name__ == "__main__":
-    print(create_network_map(infiles))
+    print(unique_network_map(create_network_map(infiles)))
+    draw_topology(unique_network_map(create_network_map(infiles)))
