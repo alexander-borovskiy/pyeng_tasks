@@ -1,0 +1,62 @@
+import re
+line = '100    aabb.cc10.7000    DYNAMIC    Gi0/1'
+
+#1
+m = re.match(r'(\d+).+?(\S+)', line)
+print(m.groups())
+
+#2
+m = re.match(r'(\d+).+?(\S+)', line)
+print(m.groups())
+
+#3
+m = re.search(r'(\d+) +[a-f0-9.] +\w+ +(\S+)', line)
+if m:
+	print(m.groups())
+else:
+	print(None)
+
+#4
+m = re.search(r'(\d+) +([a-f0-9.])+ +\w+ +(\S+)', line)
+if m:
+	print(m.groups())
+else:
+	print(None)
+
+#5
+m = re.search(r'([0-9a-f]+\.)+', line)
+if m:
+	print(m.groups())
+else:
+	print(None)
+
+table = '''
+100    aabb.cc10.7000    DYNAMIC    Gi0/1
+200    aacc.cc10.7000    DYNAMIC    Gi0/2
+100    aadd.cc10.1400    DYNAMIC    Gi0/3
+100    aadd.ee10.1400    DYNAMIC    Gi0/4
+'''
+
+#6
+print(re.findall(r'\d{3} +[a-f0-9.]+', table))
+
+#7
+print(re.findall(r'(\d{3}) +[a-f0-9.]+', table))
+
+#8
+regex = re.compile(r'(\d{3}) +((?:[a-f0-9.]+)+) +\w+ +([\w\/]+)')
+print(regex.findall(table))
+
+#9
+m = re.search(r'(?P<vlan>\d)+ +(?P<mac>\S+) +\w+ +(?P<port>\S+)', line)
+print(m.groupdict())
+
+#10
+regex = re.compile(r'(?P<vlan>\d+) +(?P<mac>\S+) +\w+ +(?P<port>\S+)')
+m = regex.search(line)
+print(m.groups())
+
+#11
+regex = re.compile(r'(?P<vlan>\d+) +(?P<mac>\S+) +\w+ +(?P<port>\S+)')
+m = regex.search(line)
+print(m.group())
