@@ -28,3 +28,34 @@ IP-адреса, диапазоны адресов и так далее, так 
 а не ввод пользователя.
 
 """
+import re
+
+
+def get_ip_from_cfg(filename):
+    """
+    Функция должна обрабатывать конфигурацию и словарь:
+    * ключ: имя интерфейса
+    * значение: кортеж с двумя строками:
+        * IP-адрес
+        * маска
+    """
+    int_ip_dict = {}
+    regex = re.compile(r'interface (?P<interface>\S+)'
+                       r'| ip address (?P<ip>\S+) (?P<mask>\S+)')
+    with open(filename) as f:
+        for line in f:
+            m = regex.search(line)
+            if m:
+                if m.lastgroup == 'interface':
+                    interface = m.group(m.lastgroup)
+                    ip_list = []
+                else:
+                    network_int = m.group('ip'), m.group('mask')
+                    ip_list.append(network_int)
+                if ip_list:
+                    int_ip_dict[interface] = ip_list
+    return int_ip_dict
+
+
+if __name__ == '__main__':
+    print(get_ip_from_cfg('config_r2.txt'))

@@ -36,7 +36,8 @@ def get_ip_from_cfg(filename):
         * маска
     """
     int_ip_dict = {}
-    regex = re.compile(r'interface (?P<interface>\S+)| ip address (?P<ip>\S+) (?P<mask>\S+)')
+    regex = re.compile(r'interface (?P<interface>\S+)'
+                       r'| ip address (?P<ip>\S+) (?P<mask>\S+)')
     with open(filename) as f:
         for line in f:
             m = regex.search(line)
