@@ -21,3 +21,26 @@
 Проверить работу функции на примере файла sh_ip_int_br.txt.
 
 """
+import re
+
+
+def parse_sh_ip_int_br(filename):
+    """
+    Функция должна обрабатывать вывод команды show ip int br и возвращать такие поля:
+    * Interface
+    * IP-Address
+    * Status
+    * Protocol
+    """
+    int_ip_list = []
+    regex = re.compile(r'(\S+) +(\S+) +\w+ +\w+ +(administratively down|up|down) +(up|down)')
+    with open(filename) as f:
+        for line in f:
+            m = regex.search(line)
+            if m:
+                int_ip_list.append(m.groups())
+    return int_ip_list
+
+
+if __name__ == '__main__':
+    print(parse_sh_ip_int_br('sh_ip_int_br.txt'))
