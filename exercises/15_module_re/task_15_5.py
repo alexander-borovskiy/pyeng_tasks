@@ -26,3 +26,24 @@ description Connected to SW1 port Eth 0/1
 
 Проверить работу функции на файле sh_cdp_n_sw1.txt.
 """
+import re
+
+
+def generate_description_from_cdp(filename):
+    """
+    Функция должна обрабатывать вывод команды show cdp neighbors и генерировать
+    на основании вывода команды описание для интерфейсов.
+    """
+    description_dict = {}
+    regex = re.compile(r'(?P<dev>\S+) +(?P<loc_intf>\S+ \S+) +\w+ +. . . +\w+ +(?P<rem_intf>\S+ \S+)')
+    with open(filename) as f:
+        for line in f:
+            m = regex.search(line)
+            if m:
+                description = f"description Connected to {m.group('dev')} port {m.group('rem_intf')}"
+                description_dict[m.group('loc_intf')] = description
+    return description_dict
+
+
+if __name__ == '__main__':
+    print(generate_description_from_cdp('sh_cdp_n_sw1.txt'))
