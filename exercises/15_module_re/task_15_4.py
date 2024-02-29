@@ -24,3 +24,28 @@ interface Loopback0
 
 Проверить работу функции на примере файла config_r1.txt.
 """
+import re
+
+
+def get_ints_without_description(filename):
+    """
+    Функция должна обрабатывать конфигурацию и возвращать список имен интерфейсов,
+    на которых нет описания (команды description).
+    """
+    no_description_list = []
+    regex = re.compile(r'^interface (?P<interface>\S+)'
+                       r'| description .+')
+    with open(filename) as f:
+        for line in f:
+            m = regex.search(line)
+            if m:
+                if m.lastgroup == 'interface':
+                    interface = m.group(m.lastgroup)
+                    no_description_list.append(interface)
+                else:
+                    no_description_list.remove(interface)
+    return no_description_list
+
+
+if __name__ == '__main__':
+    print(get_ints_without_description('config_r1.txt'))
