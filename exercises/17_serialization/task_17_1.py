@@ -31,3 +31,36 @@ sw3,00:E9:22:11:A6:50,100.1.1.7,3,FastEthernet0/21
 sw2_dhcp_snooping.txt, sw3_dhcp_snooping.txt.
 
 """
+import re
+import csv
+
+
+def write_dhcp_snooping_to_csv(filenames, output):
+    """
+    Функция обрабатывает вывод
+    команды show dhcp snooping binding из разных файлов и записывает обработанные
+    данные в csv файл.
+    """
+    data = []
+    regex = re.compile(r'(?P<mac>\S+) +(?P<ip>\S+) +\d+ +\S+ +(?P<vlan>\d+) +(?P<intf>\S+)')
+    for file in filenames:
+        with open(file) as f:
+            for line in f:
+                dhcp_dict = {}
+                m = regex.search(line)
+                if m:
+                    dhcp_dict['switch'] = file.split('_')[0]
+                    dhcp_dict['mac'] = m.group('mac')
+                    dhcp_dict['ip'] = m.group('ip')
+                    dhcp_dict['vlan'] = m.group('vlan')
+                    dhcp_dict['interface'] = m.group('intf')
+                if dhcp_dict:
+                    data.append(dhcp_dict)
+    with open(output, 'w', newline="") as f: #newline="" необходимо вставлять только для Windows
+        writer = csv.DictWriter(f, fieldnames=list(data[0].keys()))
+        writer.writeheader()
+        writer.writerows(data)
+
+
+if __name__ == '__main__':
+    write_dhcp_snooping_to_csv(['sw1_dhcp_snooping.txt', 'sw2_dhcp_snooping.txt', 'sw3_dhcp_snooping.txt'], 'dhcp_bindings.csv')
