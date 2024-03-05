@@ -24,3 +24,27 @@ R6           Fa 0/2          143           R S I           2811       Fa 0/0
 
 Проверить работу функции на содержимом файла sh_cdp_n_sw1.txt
 """
+
+import re
+
+
+def parse_sh_cdp_neighbors(sh_cdp):
+    """
+    Функция которая обрабатывает
+    вывод команды show cdp neighbors.
+    """
+    description_dict = {}
+    regex1 = re.compile(r'(?P<loc_dev>\S+)>')
+    regex2 = re.compile(r'(?P<rem_dev>\S+) +(?P<loc_intf>\S+ \S+) +\w+ +. . . +\w+ +(?P<rem_intf>\S+ \S+)')
+    m1 = regex1.search(sh_cdp)
+    m2 = regex2.finditer(sh_cdp)
+    if m1 and m2:
+        description_dict[m1.group('loc_dev')] = {}
+        for m in m2:
+            description_dict[m1.group('loc_dev')][m.group('loc_intf')] = {m.group('rem_dev'):m.group('rem_intf')}
+    return description_dict
+
+
+if __name__ == '__main__':
+    with open('sh_cdp_n_sw1.txt') as f:
+        print(parse_sh_cdp_neighbors(f.read()))
