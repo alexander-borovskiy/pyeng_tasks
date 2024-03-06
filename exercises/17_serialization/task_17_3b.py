@@ -43,3 +43,41 @@
 > pip install graphviz
 
 """
+import re
+import yaml
+import graphviz
+from draw_network_graph import draw_topology
+from pprint import pprint
+
+
+def transform_topology(topology):
+    """
+    Функция преобразует топологию в формат подходящий
+    для функции draw_topology.
+    """
+    topology_dict = {}
+    with open(topology) as f:
+        yaml_topology_dict = yaml.safe_load(f)
+        for side_a, intf_side_a_dict in yaml_topology_dict.items():
+            for intf_side_a, side_b_dict in intf_side_a_dict.items():
+                #side_a_tuple = (side_a, intf_side_a)
+                for side_b, intf_side_b in side_b_dict.items():
+                    topology_dict[side_a, intf_side_a] = (side_b, intf_side_b)
+    return unique_network_map(topology_dict)
+
+
+def unique_network_map(topology_dict):
+    """
+    Функция возвращает словарь, который описывает соединения между
+    устройствами. В словаре нет "дублирующих" соединений.
+    """
+    unique_network_map_dict = {}
+    for side_a, side_b in topology_dict.items():
+        if not unique_network_map_dict.get(side_b) == side_a:
+            unique_network_map_dict[side_a] = side_b
+    return unique_network_map_dict
+
+
+if __name__ == '__main__':
+    pprint(transform_topology('topology.yaml'))
+    draw_topology(transform_topology('topology.yaml'))
