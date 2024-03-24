@@ -48,5 +48,31 @@ Out[16]: 'config term\nEnter configuration commands, one per line.  End with CNT
 
 """
 
-commands = ["logging 10.255.255.1", "logging buffered 20010", "no logging console"]
-command = "sh ip int br"
+import yaml
+import netmiko
+
+
+def send_commands(device, *, show=None, config=None):
+    if show and config:
+        raise ValueError("Передайте либо одну команду show, либо набор конфигурационных команд.")
+    elif not show and not config:
+        raise ValueError("Не передано ни одной команды.")
+    with netmiko.Netmiko(**device) as ssh:
+        ssh.enable()
+        if show:
+            result = ssh.send_command(show)
+        else:
+            result = ssh.send_config_set(config)
+    return result
+
+
+if __name__ == "__main__":
+    commands = ["logging 10.255.255.1", "logging buffered 20010", "no logging console"]
+    command = "sh ip int br"
+    with open("devices.yaml") as f:
+        devices = yaml.safe_load(f)
+
+    for dev in devices:
+        print(send_commands(dev, show=command))
+        print(send_commands(dev, config=commands))
+        break
