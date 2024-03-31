@@ -1,0 +1,81 @@
+R1#sh ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            192.168.100.1   YES NVRAM  up                    up      
+FastEthernet0/1            unassigned      YES NVRAM  administratively down down    
+R1#sh int desc
+Interface                      Status         Protocol Description
+Fa0/0                          up             up       
+Fa0/1                          admin down     down     
+R1#sh run | s ^router ospf
+router ospf 1
+ network 0.0.0.0 255.255.255.255 area 0
+R1#sh ip route | ex -
+
+Gateway of last resort is not set
+
+      90.0.0.0/24 is subnetted, 11 subnets
+B        90.1.0.0 [20/0] via 192.168.100.2, 00:06:52
+B        90.2.0.0 [20/0] via 192.168.100.2, 00:06:52
+B        90.3.0.0 [20/0] via 192.168.100.2, 00:06:52
+B        90.4.0.0 [20/0] via 192.168.100.2, 00:06:52
+B        90.5.0.0 [20/0] via 192.168.100.2, 00:06:52
+B        90.6.0.0 [20/0] via 192.168.100.2, 00:06:52
+B        90.7.0.0 [20/0] via 192.168.100.2, 00:06:52
+B        90.8.0.0 [20/0] via 192.168.100.2, 00:06:52
+B        90.9.0.0 [20/0] via 192.168.100.2, 00:06:52
+B        90.10.0.0 [20/0] via 192.168.100.2, 00:06:52
+B        90.11.0.0 [20/0] via 192.168.100.2, 00:06:52
+      192.168.100.0/24 is variably subnetted, 2 subnets, 2 masks
+C        192.168.100.0/24 is directly connected, FastEthernet0/0
+L        192.168.100.1/32 is directly connected, FastEthernet0/0
+
+R2#sh int desc
+Interface                      Status         Protocol Description
+Fa0/0                          up             up       
+Fa0/1                          admin down     down     
+R2#sh run | s ^router ospf
+router ospf 1
+ network 0.0.0.0 255.255.255.255 area 0
+R2#sh ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            192.168.100.2   YES NVRAM  up                    up      
+FastEthernet0/1            unassigned      YES NVRAM  administratively down down    
+R2#sh ip route | ex -
+
+Gateway of last resort is not set
+
+      90.0.0.0/24 is subnetted, 11 subnets
+S        90.1.0.0 is directly connected, Null0
+S        90.2.0.0 is directly connected, Null0
+S        90.3.0.0 is directly connected, Null0
+S        90.4.0.0 is directly connected, Null0
+S        90.5.0.0 is directly connected, Null0
+S        90.6.0.0 is directly connected, Null0
+S        90.7.0.0 is directly connected, Null0
+S        90.8.0.0 is directly connected, Null0
+S        90.9.0.0 is directly connected, Null0
+S        90.10.0.0 is directly connected, Null0
+S        90.11.0.0 is directly connected, Null0
+      192.168.100.0/24 is variably subnetted, 2 subnets, 2 masks
+C        192.168.100.0/24 is directly connected, FastEthernet0/0
+L        192.168.100.2/32 is directly connected, FastEthernet0/0
+
+R3#sh ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            192.168.100.3   YES NVRAM  up                    up      
+FastEthernet0/1            unassigned      YES NVRAM  administratively down down    
+R3#sh ip route | ex -
+
+Gateway of last resort is not set
+
+      192.168.100.0/24 is variably subnetted, 2 subnets, 2 masks
+C        192.168.100.0/24 is directly connected, FastEthernet0/0
+L        192.168.100.3/32 is directly connected, FastEthernet0/0
+
+R3#sh run | s ^router ospf
+router ospf 1
+ network 0.0.0.0 255.255.255.255 area 0
+R3#sh int desc
+Interface                      Status         Protocol Description
+Fa0/0                          up             up       
+Fa0/1                          admin down     down     
