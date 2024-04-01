@@ -105,3 +105,69 @@ R3#
 
 Для выполнения задания можно создавать любые дополнительные функции.
 """
+import logging
+import netmiko
+import time
+import yaml
+
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
+
+logging.getLogger("paramiko").setLevel(logging.WARNING)
+
+logging.basicConfig(
+    format = '%(threadName)s %(name)s %(levelname)s: %(message)s',
+    level=logging.INFO)
+
+
+def send_commands(device, *, show=None, config=None):
+    start_msg = '===> {} Connection: {}'
+    received_msg = '<=== {} Received: {}'
+    ip = device['host']
+    logging.info(start_msg.format(datetime.now().time(), ip))
+    with netmiko.Netmiko(**device) as ssh:
+        ssh.enable()
+        prompt = ssh.find_prompt()
+        if show:
+            result = ssh.send_command(show)
+            command = show
+            return_result = f"{prompt}{command}\n{result}\n"
+        else:
+            result = ssh.send_config_set(config)
+            return_result = f"{result}\n"
+        logging.info(received_msg.format(datetime.now().time(), ip))
+    return return_result
+
+
+def send_commands_to_devices(devices, filename, *, show=None, config=None, limit=3):
+    if show and config:
+        raise ValueError("Передайте либо одну команду show, либо набор конфигурационных команд.")
+    elif not show and not config:
+        raise ValueError("Не передано ни одной команды.")
+    with ThreadPoolExecutor(max_workers=limit) as executor:
+        future_list = []
+        if show:
+            for device in devices:
+                future = executor.submit(send_commands, device, show=show)
+                future_list.append(future)
+        else:
+            for device in devices:
+                future = executor.submit(send_commands, device, config=config)
+                future_list.append(future)
+    with open(filename, "w") as file_to_save:
+        for f in future_list:
+            file_to_save.write(f.result())
+
+
+if __name__ == "__main__":
+    show_command ='sh clock'
+    config_command = 'logging 10.5.5.5'
+    config_commands = ['router ospf 55', 'network 0.0.0.0 255.255.255.255 area 0']
+    with open("devices.yaml") as f:
+        devices = yaml.safe_load(f)
+    send_commands_to_devices(devices, "send_commands_to_devices_19_4.txt", show=show_command, limit=2)
+    #send_commands_to_devices(devices, "send_commands_to_devices_19_4.txt", limit=2)
+    #send_commands_to_devices(devices, "send_commands_to_devices_19_4.txt", 'sh clock',  limit=2)
+    #send_commands_to_devices(devices, "send_commands_to_devices_19_4.txt", show=show_command, config=config_command, limit=2)
+    #send_commands_to_devices(devices, "send_commands_to_devices_19_4.txt", config=config_command, limit=2)
+    #send_commands_to_devices(devices, "send_commands_to_devices_19_4.txt", config=config_commands, limit=2)

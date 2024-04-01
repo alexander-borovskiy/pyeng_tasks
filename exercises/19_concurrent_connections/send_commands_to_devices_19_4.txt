@@ -1,0 +1,6 @@
+R1#sh clock
+*12:39:02.139 UTC Mon Apr 1 2024
+R2#sh clock
+*12:39:01.743 UTC Mon Apr 1 2024
+R3#sh clock
+*12:38:18.915 UTC Mon Apr 1 2024
