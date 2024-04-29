@@ -24,11 +24,19 @@ Out[4]: 'Interface                  IP-Address      OK? Method Status           
 """
 from netmiko.cisco.cisco_ios import CiscoIosSSH
 
+class MyNetmiko(CiscoIosSSH):
+    def __init__(self, **device_params):
+        super().__init__(**device_params)
+        self.enable()        
+        
 
-device_params = {
-    "device_type": "cisco_ios",
-    "ip": "192.168.100.1",
-    "username": "cisco",
-    "password": "cisco",
-    "secret": "cisco",
-}
+if __name__ == '__main__':
+    device_params = {
+        "device_type": "cisco_ios",
+        "ip": "192.168.100.1",
+        "username": "cisco",
+        "password": "cisco",
+        "secret": "cisco",
+        }
+    r1 = MyNetmiko(**device_params)
+    print(r1.send_command('sh ip int br'))
