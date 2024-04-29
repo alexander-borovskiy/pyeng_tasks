@@ -44,14 +44,15 @@ class MyNetmiko(CiscoIosSSH):
             error = re.search(r'% (?P<error>.+)', command_output)
             raise ErrorInCommand(f'При выполнении команды "{command}" на устройстве {self.host} возникла ошибка "{error.group("error")}"')
             
-    def send_config_set(self, config_commands, *args, **kwargs):
+    def send_config_set(self, config_commands):
         if type(config_commands) == str:
             config_commands = [config_commands]
         command_output = ""
+        self.config_mode()
         for command in config_commands:
-            command_output += super().send_config_set(command, *args, **kwargs)
-            print(command_output)
-            self._check_error_in_command(command, command_output)            
+            command_output += super().send_config_set(command, exit_config_mode=False)
+            self._check_error_in_command(command, command_output)
+        self.exit_config_mode()
         return command_output
         
         
