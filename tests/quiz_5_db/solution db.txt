@@ -1,0 +1,73 @@
+1. Какая команда корректно добавит информацию о sw3 в соответствующие столбцы?
+CREATE TABLE inventory (hostname text, vendor text, model text, location text, mngmt_ip text);
+- INSERT into inventory (mngmt_ip, location, model, vendor, hostname) values ('10.5.254.3', 'London', '3850', 'Cisco', 'sw3');
+- insert into inventory values ('sw3', 'Cisco', '3850', 'London', '10.5.254.3');
+
+2. Какая команда отобразит вывод так, как это отображено на скриншоте? (с учетом того, что схема таблицы такая, как показано в выводе команды .schema inventory)
+- SELECT * from inventory;
+- select * from inventory;
+- select hostname, vendor, model, location, mngmt_ip from inventory;
+
+3. Какая команда отобразит из таблицы только информацию о r1?
+- SELECT * from inventory WHERE hostname = 'r1';
+- SELECT * from inventory WHERE hostname != 'r2' and vendor = 'Cisco';
+- SELECT * from inventory WHERE mngmt_ip = '10.5.255.1';
+- SELECT * from inventory WHERE model = '2921';
+- SELECT * from inventory WHERE model > '2911' and model < '5308';
+
+4. Какая команда отобразит из таблицы только информацию о маршрутизаторах?
+- SELECT * from inventory where hostname like 'r_' and vendor = 'Cisco';
+- SELECT * from inventory where hostname like 'r%';
+- SELECT * from inventory where hostname like 'r_';
+
+5. Какая команда удалит запись об r1 из таблицы?
+- DELETE from inventory where hostname = 'r1';
+
+6. Какая команда обновит модель коммутаторов sw3 и sw4 с 3750 на 3850?
+- update inventory set model = '3850' where model = '3750';
+
+7. Какая команда отобразит из таблицы только информацию о маршрутизаторах?
+- SELECT * from inventory where model != '3750' and model != '5308';
+- SELECT * from inventory where model like '%29%';
+- SELECT * from inventory where model like '%29__';
+- SELECT * from inventory where model not in ('3750', '5308');
+- SELECT * from inventory where model in ('2921', '2911', 'C2911');
+- SELECT * from inventory where model = '%29__';
+
+8. Какая команда отсортирует таблицу по возрастанию IP-адреса?
+- SELECT * from inventory order by mngmt_ip;
+
+9. Какие строки надо добавить в скрипт (в нижней части), чтобы запрос query выполнился и добавил запись про r5?
+
+import sqlite3
+connection = sqlite.connect('inventory.db')
+cursor = connection.cursor()
+query = """insert into inventory values ('r5', 'Cisco', 'C2911', 'London', '10.5.255.5')"""
+cursor.execute(query)
+connection.commit()
+
+connection.execute(query)
+connection.commit()
+
+10. Какой вывод будет у скрипта (в нижней части), учитывая содержимое таблицы (в верхней части)?
+
+import sqlite3
+connection = sqlite.connect('inventory.db')
+cursor = connection.cursor()
+cursor.execute('select * from inventory')
+while cursor.fetchone():
+	print(cursor.fetchone())
+
+Вариант 3
+
+11. Какие строки надо добавить в скрипт (в нижней части), чтобы  добавить записи rows?
+import sqlite3
+connection = sqlite.connect('inventory.db')
+cursor = connection.cursor()
+rows = [('sw5', 'Cisco', '3850', 'London', '10.5.254.5'), ('sw6', 'Cisco', '3750', 'London', '10.5.254.6'), ('sw7', 'Cisco', '3850', 'London', '10.5.254.7')]
+query = """insert into inventory values (?, ?, ?, ?, ?)"""
+for row in rows:
+	cursor.execute(query, row) или connection.execute(query, row)
+#2
+#cursor.executemany(query, rows) или connection.executemany(query, row)
+connection.commit()
