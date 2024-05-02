@@ -1,0 +1,18 @@
+litecli inventory.db
+CREATE TABLE inventory (hostname text, vendor text, model text, location text, mngmt_ip text);
+INSERT into inventory values ('r1', 'Cisco', '2921', 'London', '10.5.255.1');
+INSERT into inventory values ('r2', 'Cisco', '2911', 'London', '10.5.255.2');
+INSERT into inventory values ('sw1', 'HP', '5308', 'London', '10.5.254.1');
+INSERT into inventory values ('sw2', 'HP', '5308', 'London', '10.5.254.2');
+INSERT into inventory (mngmt_ip, location, model, vendor, hostname) values ('10.5.254.3', 'London', '3850', 'Cisco', 'sw3'); +
+insert into inventory values ('sw3', 'Cisco', '3850', 'London', '10.5.254.3'); +
+INSERT into inventory 'sw3', 'Cisco', '3850', 'London', '10.5.254.3'; -
+insert into inventory ('10.5.254.3', 'London', '3850', 'Cisco', 'sw3'); -
+INSERT into inventory ('sw3', 'Cisco', '3850', 'London', '10.5.254.3');  -
+INSERT into inventory 'sw3', 'Cisco', '3850', 'London', '10.5.254.3'; -
+DELETE from inventory where hostname = 'sw3';
+SELECT * from inventory;
+INSERT into inventory values ('r3', 'Cisco', 'C2911', 'London', '10.5.255.3');
+INSERT into inventory values ('r4', 'Cisco', 'C2921', 'London', '10.5.255.4');
+INSERT into inventory values ('sw3', 'Cisco', '3750', 'London', '10.5.254.3');
+INSERT into inventory values ('sw4', 'Cisco', '3750', 'London', '10.5.254.4');
