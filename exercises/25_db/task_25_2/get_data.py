@@ -65,6 +65,7 @@ $ python get_data.py ip vlan 10
 """
 import sqlite3
 import sys
+from tabulate import tabulate
 
 
 def get_data(db_name):
@@ -85,28 +86,20 @@ def get_data(db_name):
         'Допустимые значения параметров: {}'.format(', '.join(keys)))
         return
     print('\nИнформация об устройствах с такими параметрами: ', key, value)
-    print('-' * 17 + '  ' + '-' * 15 + '  ' + '-' * 2 + '  ' + '-' * 16 + '  ' + '-' * 3)
     query = query_dict[key]
     conn = db_connect(db_name)
     cursor = conn.cursor()
     result = cursor.execute(query, (value, ))
-    for row in result:
-        mac, ip, vlan, interface, switch = row
-        print("{:>17}  {:<15}  {:>2}  {:<16}  {:>3}".format(mac, ip, vlan, interface, switch))
-    print('-' * 17 + '  ' + '-' * 15 + '  ' + '-' * 2 + '  ' + '-' * 16 + '  ' + '-' * 3)
+    print(tabulate(result))
     db_close(conn)
 
 
 def get_alldata():
     print("В таблице dhcp такие записи:")
-    print('-' * 17 + '  ' + '-' * 15 + '  ' + '-' * 2 + '  ' + '-' * 16 + '  ' + '-' * 3)
     conn = db_connect(db_name)
     cursor = conn.cursor()
     result = cursor.execute('select * from dhcp')
-    for row in result:
-        mac, ip, vlan, interface, switch = row
-        print("{:>17}  {:<15}  {:>2}  {:<16}  {:>3}".format(mac, ip, vlan, interface, switch))
-    print('-' * 17 + '  ' + '-' * 15 + '  ' + '-' * 2 + '  ' + '-' * 16 + '  ' + '-' * 3)
+    print(tabulate(result))
     db_close(conn)
 
 
